@@ -1,0 +1,72 @@
+:root {
+  --bg-color: #406769;
+  --bg-card: #649da0;
+  --text-main: #ffffff;
+  --bg-cirlle: #e4fde1;
+
+  --font-family:
+    -"Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  --radius: 5px;
+}
+
+*,
+*::before *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+/* header */
+.portal-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--text-main);
+  padding: 1rem, 2rem;
+}
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: right;
+  justify-content: space-evenly;
+}
+.header-logo {
+  display: flex;
+  align-items: right;
+  gap: 0.75rem;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  align-items: right;
+}
+
+.header-status {
+  font-size: 1rem;
+  font-weight: 500;
+  align-items: right;
+}
+.badge-count {
+  background-color: var(--bg-circle);
+  color: var(--text-main);
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+}
+
+/* footer */
+.portal-footer {
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--text-main);
+  padding: 1rem, 2rem;
+  text-align: center;
+}
