@@ -22,7 +22,9 @@
       <section class="panel records-panel">
         <div class="records-header">
           <h2 class="panel-title">Current Queue</h2>
-          <button class="btn btn-outline-danger btn-sm">Clear Queue</button>
+          <button id="btn-clear-all" class="btn btn-outline-danger btn-sm">
+            Clear Queue
+          </button>
         </div>
         <div id="empty-state" class="empty-state">
           <span class="empty-state-icon"> &#128393;</span>
@@ -38,12 +40,12 @@
           id="form-error"
           role="alert"
         ></div>
-        <form action="#" id="pH-form" novalidate>
+        <form action="#" id="input-form" novalidate>
           <div class="form-group">
-            <label for="pH-name" class="form-label">pH Level</label>
+            <label for="pH" class="form-label">pH Level</label>
             <input
               type="number"
-              id="pH-name"
+              id="pH"
               class="form-control"
               placeholder="Enter pH level"
               step="0.1"
@@ -52,33 +54,31 @@
               required
             />
 
-            <label for="electrical-conductivity" class="form-label"
+            <label for="ec" class="form-label"
               >Electrical Conductivity mS/cm</label
             >
             <input
               type="number"
-              id="electrical-conductivity"
+              id="ec"
               class="form-control"
               placeholder="Enter electrical conductivity"
               step="0.1"
               min="0"
               required
             />
-            <label for="air-temperature" class="form-label"
-              >Temperature °F</label
-            >
+            <label for="temp" class="form-label">Temperature °F</label>
             <input
               type="number"
-              id="air-temperature"
+              id="temp"
               class="form-control"
               placeholder="Enter air temperature"
               step="0.1"
               required
             />
-            <label for="relative-humidity" class="form-label">Humidity %</label>
+            <label for="rh" class="form-label">Humidity %</label>
             <input
               type="number"
-              id="relative-humidity"
+              id="rh"
               class="form-control"
               placeholder="Enter relative humidity"
               step="0.1"
