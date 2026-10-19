@@ -51,6 +51,7 @@
     ) {
       return { level: "critical", label: "Critical" };
     }
+
     if (
       pH >= 5.5 &&
       pH <= 6.5 &&
@@ -63,43 +64,23 @@
     ) {
       return { level: "optimal", label: "Optimal" };
     }
-    if (
-      !(
-        (pH < 5.0 || pH > 7.5) &&
-        (temp < 55 || temp > 95) &&
-        (ec < 0.2 || ec > 4.5) &&
-        (rh < 30 || rh > 90)
-      ) &&
-      !(
-        pH >= 5.5 &&
-        pH <= 6.5 &&
-        temp >= 64.4 &&
-        temp <= 71.6 &&
-        ec >= 1.0 &&
-        ec <= 2.0 &&
-        rh >= 50 &&
-        rh <= 70
-      )
-    ) {
-      return { level: "warning", label: "Warning" };
-    }
+    return { level: "warning", label: "Warning" };
   }
+
   function validateInput(data) {
     const errors = [];
-    if(!data.name.trim()) {
-      errors.push("Name is required.");
+
+    if (isNaN(data.pH)) {
+      errors.push("pH must be a number.");
     }
-    if(isNaN(data.pH) || data.pH < 0 || data.pH > 14) {
-        errors.push("pH must be a number between 0 and 14.");
+    if (isNaN(data.ec)) {
+      errors.push("Electrical Conductivity must be a number.");
     }
-    if(isNaN(data.ec) || data.ec < 0) {
-        errors.push("Electrical Conductivity must be a non-negative number.");
+    if (isNaN(data.temp)) {
+      errors.push("Temperature must be a number.");
     }
-    if(isNaN(data.temp) || data.temp < -50 || data.temp > 150) {
-        errors.push("Temperature must be a number between -50°F and 150°F.");
-    }
-    if(isNaN(data.rh) || data.rh < 0 || data.rh > 100) {
-        errors.push("Humidity must be a number between 0% and 100%.");
+    if (isNaN(data.rh)) {
+      errors.push("Humidity must be a number.");
     }
     return errors;
   }
@@ -108,96 +89,99 @@
     event.preventDefault();
 
     const formData = {
-    id: crypto.randomUUID(),
-    name: inputForm.elements["name"].value.trim(),
-    pH: parseFloat(inputForm.elements["pH"].value),
-    ec: parseFloat(inputForm.elements["ec"].value),
-    temp: parseFloat(inputForm.elements["temp"].value),
-    rh: parseFloat(inputForm.elements["rh"].value),
-    timestamp: new Date().toISOString([], {
+      id: crypto.randomUUID(),
+      pH: parseFloat(inputForm.elements["pH"].value),
+      ec: parseFloat(inputForm.elements["ec"].value),
+      temp: parseFloat(inputForm.elements["temp"].value),
+      rh: parseFloat(inputForm.elements["rh"].value),
+      timestamp: new Date().toISOString([], {
         hour: "2-digit",
         minute: "2-digit",
-    }),
+      }),
     };
 
     const validationErrors = validateInput(formData);
     if (validationErrors.length > 0) {
-        displayError(validationErrors.join(" "));
-        return;
+      displayError(validationErrors.join(" "));
+      return;
     }
     hideError();
 
-    formData.risk = evaluationRisk(formData.pH, formData.ec, formData.temp, formData.rh);
+    formData.risk = evaluationRisk(
+      formData.pH,
+      formData.ec,
+      formData.temp,
+      formData.rh,
+    );
 
     records.unshift(formData);
     inputForm.reset();
     saveRecords();
-
-    recordsList.addEventListener("click", function (event) {
-        const target = event.target;
-
-        if(target.classList.contains("btn-discharge")){
-            const recordId = target.dataset.recordId;
-            records = records.filter(function(record) {
-                return record.id !== recordId;
-            });
-            saveRecords();
-            render();
-        }
-    });
-
-    btnClearAll.addEventListener("click", (event) => () {
-        if(confirm("Are you sure you want to clear all records? This action cannot be undone.")) {
-            records = [];
-            saveRecords();
-            render();
-        }
-    });
-
-    function render() {
-        activeQueue.textContent = records.length;
+  });
+  recordsList.addEventListener("click", function (event) {
+    const target = event.target;
+    if (target.classList.contains("btn-discharge")) {
+      const recordId = target.dataset.recordId;
+      records = records.filter(function (record) {
+        return record.id !== recordId;
+      });
+      saveRecords();
+      render();
     }
+  });
 
-    if(records.length ===0){
-        emptyState.classList.remove("hidden");
-        recordsList.innerHTML = "";
-        return;
+  function render() {
+    activeQueue.textContent = records.length;
+  }
+  btnClearAll.addEventListener("click", (event) => {
+    if (
+      confirm(
+        "Are you sure you want to clear all records? This action cannot be undone.",
+      )
+    ) {
+      records = [];
+      saveRecords();
+      render();
     }
+  });
 
-    emptyState.classList.add("hidden");
-    const fragment = document.createDocumentFragment();
-    records.forEach(function(record) {
-        const listItem = document.createElement("li");
+  if (records.length === 0) {
+    emptyState.classList.remove("hidden");
+    recordsList.innerHTML = "";
+    return;
+  }
+
+  emptyState.classList.add("hidden");
+  const fragment = document.createDocumentFragment();
+  records.forEach(function (record) {
+    const listItem = document.createElement("li");
     listItem.className = `list-group-item d-flex justify-content-between align-items-center risk-${record.risk.level}`;
     listItem.innerHTML = `
         <div>
-            <strong>${record.name}</strong> - pH: ${record.pH}, EC: ${record.ec}, Temp: ${record.temp}°F, RH: ${record.rh}%
+            pH: ${record.pH}, EC: ${record.ec}, Temp: ${record.temp}°F, RH: ${record.rh}%
             <span class="badge bg-${record.risk.level}">${record.risk.label}</span>
         </div>
         <button class="btn btn-sm btn-danger btn-discharge" data-record-id="${record.id}">Discharge</button>
     `;
     fragment.appendChild(listItem);
-    }
+  });
 
-    recordsList.appendChild(fragment);
+  recordsList.appendChild(fragment);
 
-    function displayError(message) {
-        formError.textContent = message;
-        formError.classList.remove("hidden");
-    }
+  function displayError(message) {
+    formError.textContent = message;
+    formError.classList.remove("hidden");
+  }
 
-    function hideError() {
-        formError.textContent = "";
-        formError.classList.add("hidden");
-    }
+  function hideError() {
+    formError.textContent = "";
+    formError.classList.add("hidden");
+  }
 
-    function escapeHTML(str) {
-        return str
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")    
-    }
-
-
-
+  function escapeHTML(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
 })();
