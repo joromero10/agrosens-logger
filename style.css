@@ -134,7 +134,7 @@ body {
     box-shadow 0.2s;
 }
 
-.form-control:focus {
+/* .form-control:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
@@ -143,7 +143,7 @@ body {
 .form-control.input-invalid {
   border-color: var(--critical-hazard);
   background-color: rgba(239, 68, 68, 0.05);
-}
+} */
 /* buttons */
 .btn {
   display: inline-flex;
