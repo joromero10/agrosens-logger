@@ -1,5 +1,5 @@
 (function () {
-  "use strict()";
+  "use strict";
 
   const STORAGE_KEY = "greenhouse-logger-records";
   const inputForm = document.getElementById("input-form");
@@ -94,7 +94,7 @@
       ec: parseFloat(inputForm.elements["ec"].value),
       temp: parseFloat(inputForm.elements["temp"].value),
       rh: parseFloat(inputForm.elements["rh"].value),
-      timestamp: new Date().toISOString([], {
+      timestamp: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       }),
@@ -117,6 +117,7 @@
     records.unshift(formData);
     inputForm.reset();
     saveRecords();
+    render();
   });
   recordsList.addEventListener("click", function (event) {
     const target = event.target;
@@ -132,6 +133,39 @@
 
   function render() {
     activeQueue.textContent = records.length;
+    // this is for when 1 == 1; and "1" === 1 so converts the values from strings to ints
+    if (records.length === 0) {
+      emptyState.classList.remove("hidden");
+      recordsList.innerHTML = "";
+      return;
+    }
+    emptyState.classList.add("hidden");
+    const fragment = document.createDocumentFragment();
+
+    records.forEach(function (rec) {
+      const li = document.createElement("li");
+      li.className = "arg-card status-" + rec.risk.level;
+
+      li.innerHTML = `
+      <div>
+        pH: ${rec.pH},
+        EC: ${rec.ec},
+        Temp: ${rec.temp}°F,
+        RH: ${rec.rh}%
+
+        <span class="badge bg-${rec.risk.level}">
+          ${rec.risk.label}
+        </span>
+      </div>
+      <button 
+      class="btn btn-sm btn-danger btn-discharge"
+      data-record-id="${rec.id}">
+      Remove
+      </button>
+      `;
+      fragment.appendChild(li);
+    });
+    recordsList.appendChild(fragment);
   }
   btnClearAll.addEventListener("click", (event) => {
     if (
@@ -144,29 +178,6 @@
       render();
     }
   });
-
-  if (records.length === 0) {
-    emptyState.classList.remove("hidden");
-    recordsList.innerHTML = "";
-    return;
-  }
-
-  emptyState.classList.add("hidden");
-  const fragment = document.createDocumentFragment();
-  records.forEach(function (record) {
-    const listItem = document.createElement("li");
-    listItem.className = `list-group-item d-flex justify-content-between align-items-center risk-${record.risk.level}`;
-    listItem.innerHTML = `
-        <div>
-            pH: ${record.pH}, EC: ${record.ec}, Temp: ${record.temp}°F, RH: ${record.rh}%
-            <span class="badge bg-${record.risk.level}">${record.risk.label}</span>
-        </div>
-        <button class="btn btn-sm btn-danger btn-discharge" data-record-id="${record.id}">Discharge</button>
-    `;
-    fragment.appendChild(listItem);
-  });
-
-  recordsList.appendChild(fragment);
 
   function displayError(message) {
     formError.textContent = message;
