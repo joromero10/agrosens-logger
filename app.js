@@ -149,22 +149,48 @@
       li.className = "arg-card status-" + rec.risk.level;
 
       li.innerHTML = `
+      <div class="card-top">
       <div>
-        pH: ${rec.pH},
-        EC: ${rec.ec},
-        Temp: ${rec.temp}°F,
-        RH: ${rec.rh}%
-
-        <span class="badge bg-${rec.risk.level}">
+        <div class="reading-title">
+          Greenhouse Reading
+        </div>
+        <div class="timestamp">
+          Logged at ${rec.timestamp}
+        </div>
+        <span class="risk-badge ${rec.risk.level}">
           ${rec.risk.label}
         </span>
       </div>
-      <button 
-      class="btn btn-sm btn-danger btn-discharge"
+      <div class="sensor-stats">
+      <div class="stat-item">
+        <span>pH</span>
+        ${rec.pH}
+      </div>
+
+      <div class="stat-item">
+        <span>EC</span>
+        ${rec.ec}
+      </div>
+
+      <div class="stat-item">
+        <span>Temperature</span>
+        ${rec.temp}°F
+      </div>
+
+      <div class="stat-item">
+        <span>Humidity</span>
+        ${rec.rh}%
+      </div>
+    </div>
+
+    <button
+      class="btn btn-outline-danger btn-sm btn-discharge"
       data-record-id="${rec.id}">
-      Remove
-      </button>
-      `;
+      Remove Reading
+    </button>
+
+  </div>
+`;
       fragment.appendChild(li);
     });
     recordsList.appendChild(fragment);
