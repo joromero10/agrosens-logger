@@ -1,20 +1,20 @@
 :root {
-  --bg-color: #406769;
-  --border-color: #314e50;
-  --bg-card: #649da0;
-  --text-main: #ffffff;
-  --bg-circle: #e4fde1;
-  --optimal: #a8e6cf;
+  --bg-color: #5a6a46;
+  --border-color: #a0ab89;
+  --bg-card: #858f65;
+  --text-main: #bac79a;
+  --bg-circle: rgb(117, 141, 116);
+  --optimal: #e0f1b2;
   --warning: #ffd54f;
   --critical-hazard: #ee7373;
   --bg-card-secondary: #565449;
-  --bg-panel: #314e50;
-  --primary: #0284c7;
-  --primary-hover: #0369a1;
+  --bg-panel: #838d67;
+  --primary: #efd7cf;
+  --primary-hover: #ddbaae;
   --text-muted: #d1d5db;
 
   --font-family:
-    -"Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   --radius: 5px;
 }
@@ -40,17 +40,19 @@ body {
   background-color: var(--bg-card);
   border-bottom: 1px solid var(--text-main);
   padding: 1rem 2rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .header-content {
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 1rem;
 }
 .header-logo {
   display: flex;
+  font-size: 1.5rem;
   align-items: center;
   gap: 0.75rem;
 }
@@ -59,12 +61,15 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
   align-items: center;
+  color: var(--text-muted);
 }
 
 .header-status {
   font-size: 1rem;
+  margin-left: auto;
   font-weight: 500;
-  align-items: center;
+  align-items: flex-end;
+  color: var(--text-muted);
 }
 .badge-count {
   background-color: var(--bg-circle);
@@ -75,14 +80,14 @@ body {
 }
 /* main */
 .portal-container {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 100%;
   margin: 2rem auto;
   padding: 0 1.5rem;
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: minmax(320px, 450px) 1fr;
   gap: 2rem;
   flex-grow: 1;
-  width: 100%;
 }
 
 .panel {
@@ -214,17 +219,60 @@ body {
   display: block;
   margin-bottom: 0.5rem;
 }
+.records-panel {
+  min-width: 0;
+}
 
 /* footer */
 .portal-footer {
   background-color: var(--bg-card);
   border-top: 1px solid var(--text-main);
-  padding: 1rem, 2rem;
+  padding: 1rem 2rem;
   text-align: center;
 }
-
-@media (max-width: 860px) {
+/* ipad support */
+@media (max-width: 1024px) {
   .portal-container {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  .panel {
+    padding: 1rem;
+  }
+  .header-title {
+    font-size: 1.25rem;
+  }
+  .header-status {
+    font-size: 0.9rem;
+  }
+}
+
+/* iphone support */
+@media (max-width: 768px) {
+  .portal-header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .portal-container {
+    padding: 0 0.75rem;
+  }
+  .panel {
+    padding: 0.75rem;
+  }
+  .btn {
+    width: 100%;
+  }
+  .header-title {
+    width: 100%;
+    text-align: left;
+    margin-left: 0;
+  }
+  .header-status {
+    font-size: 0.8rem;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
