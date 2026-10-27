@@ -137,9 +137,11 @@
     if (records.length === 0) {
       emptyState.classList.remove("hidden");
       recordsList.innerHTML = "";
+      const fragment = document.createDocumentFragment();
       return;
     }
     emptyState.classList.add("hidden");
+    recordsList.innerHTML = "";
     const fragment = document.createDocumentFragment();
 
     records.forEach(function (rec) {
